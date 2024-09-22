@@ -10,7 +10,7 @@ parser.add_argument('-i', '--image', type=str, default="img/1.jpg",
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    print("Image: {}, Device: {}, starting".format(args.image, args.device))
+    print("Image: {}, Device: {}".format(args.image, args.device))
     if args.device == "cuda":
         import src.notebook_run as nr
 
