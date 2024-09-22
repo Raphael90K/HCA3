@@ -41,7 +41,7 @@ def bench_classification(image_path):
 
     # Load the HEF file for the model
     model_name = 'mobilenetv2_cifar10'
-    hef_path = '../model/{}.hef'.format(model_name)
+    hef_path = 'model/{}.hef'.format(model_name)
     hef = HEF(hef_path)
 
     # Configure network groups
