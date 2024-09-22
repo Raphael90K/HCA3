@@ -1,0 +1,23 @@
+2024-09-22 10:06:00,709 - WARNING - mo_config.py:161 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's no available GPU
+2024-09-22 10:06:00,713 - WARNING - mo_config.py:226 - Running model optimization with zero level of optimization is not recommended for production use and might lead to suboptimal accuracy results
+2024-09-22 10:06:00,715 - INFO - mo_script_parser.py:82 - Model received quantization params from the hn
+2024-09-22 10:06:02,389 - INFO - algorithm_base.py:144 - Starting Mixed Precision
+2024-09-22 10:06:02,620 - INFO - algorithm_base.py:160 - Mixed Precision is done (completion time is 00:00:00.23)
+2024-09-22 10:06:02,858 - INFO - algorithm_base.py:141 - Layer Norm Decomposition skipped
+2024-09-22 10:06:03,116 - INFO - algorithm_base.py:144 - Starting Stats Collector
+2024-09-22 10:06:03,122 - INFO - stats_collection.py:73 - Using dataset with 64 entries for calibration
+2024-09-22 10:06:12,208 - INFO - algorithm_base.py:160 - Stats Collector is done (completion time is 00:00:09.09)
+2024-09-22 10:06:13,289 - INFO - algorithm_base.py:144 - Starting Fix zp_comp Encoding
+2024-09-22 10:06:13,289 - INFO - algorithm_base.py:160 - Fix zp_comp Encoding is done (completion time is 00:00:00.00)
+2024-09-22 10:06:13,290 - INFO - algorithm_base.py:141 - matmul_equalization skipped
+2024-09-22 10:06:14,243 - INFO - conv_stripped_op.py:513 - No shifts available for layer mobilenetv2_cifar10/fc1/conv_op, using max shift instead. delta=0.4335
+2024-09-22 10:06:14,276 - INFO - conv_stripped_op.py:513 - No shifts available for layer mobilenetv2_cifar10/fc1/conv_op, using max shift instead. delta=0.2168
+2024-09-22 10:06:16,401 - INFO - algorithm_base.py:141 - Finetune encoding skipped
+2024-09-22 10:06:16,405 - INFO - algorithm_base.py:141 - Bias Correction skipped
+2024-09-22 10:06:16,412 - INFO - algorithm_base.py:141 - Adaround skipped
+2024-09-22 10:06:16,419 - INFO - algorithm_base.py:141 - Fine Tune skipped
+2024-09-22 10:06:18,589 - INFO - algorithm_base.py:141 - Layer Noise Analysis skipped
+2024-09-22 10:06:18,671 - INFO - quant_checker.py:167 - The calibration set seems to not be normalized, because the values range is [(0.0, 1.0), (0.0, 1.0), (0.0, 1.0)].
+Since the neural core works in 8-bit (between 0 to 255), a quantization will occur on the CPU of the runtime platform.
+Add a normalization layer to the model to offload the normalization to the neural core.
+Refer to the user guide Hailo Dataflow Compiler user guide / Model Optimization / Optimization Related Model Script Commands / model_modification_commands / normalization for details.
