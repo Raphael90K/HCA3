@@ -19,7 +19,8 @@ def bench_classification(image_path, dev: str):
     # Load the MobileNetV2 model and modify the classifier for your task (e.g., CIFAR-10 with 10 classes)
     model = models.mobilenet_v2(weights=None)
     model.classifier[1] = nn.Linear(model.last_channel, 10)  # Assuming 10 output classes (CIFAR-10)
-    model.load_state_dict(torch.load("../model/mobilenetv2_cifar10.pth", weights_only=False, map_location=device))  # Load custom weights
+    model.load_state_dict(
+        torch.load("model/mobilenetv2_cifar10.pth", weights_only=False, map_location=device))  # Load custom weights
     model = model.to(device)
     model.eval()  # Set model to evaluation mode
 
@@ -54,10 +55,8 @@ def use_model(device, preprocess, model):
     print(f'Predicted label: {class_labels[pred]}')
 
 
-# Test the function with an image
-image_path = '../img/1.jpg'  # Replace with the path to your image
-bench_classification(image_path, "cpu")
+def use(img, device):
+    bench_classification(img, device)
 
-avg_time = profiler.get_average_time()
-
-print(f"Average inference time: {avg_time:.4f} seconds")
+    avg_time = profiler.get_average_time()
+    print(f"Average inference time: {avg_time:.4f} seconds")

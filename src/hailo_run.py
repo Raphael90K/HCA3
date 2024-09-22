@@ -1,27 +1,10 @@
 import numpy as np
 from PIL import Image
-import importlib
+from src.profiler import Profiler
 
-try:
-    # Dynamischer Import des gesamten 'hailo_platform'-Moduls
-    hailo_platform = importlib.import_module("hailo_platform")
-    print("hailo_platform Modul wurde erfolgreich importiert.")
+from hailo_platform import (HEF, VDevice, HailoStreamInterface, InferVStreams, ConfigureParams,
+                            InputVStreamParams, OutputVStreamParams, InputVStreams, OutputVStreams, FormatType)
 
-    # Zugriff auf die benötigten Klassen und Funktionen
-    HEF = hailo_platform.HEF
-    VDevice = hailo_platform.VDevice
-    HailoStreamInterface = hailo_platform.HailoStreamInterface
-    InferVStreams = hailo_platform.InferVStreams
-    ConfigureParams = hailo_platform.ConfigureParams
-    InputVStreamParams = hailo_platform.InputVStreamParams
-    OutputVStreamParams = hailo_platform.OutputVStreamParams
-    InputVStreams = hailo_platform.InputVStreams
-    OutputVStreams = hailo_platform.OutputVStreams
-    FormatType = hailo_platform.FormatType
-except ImportError:
-    pass
-
-from profiler import Profiler
 
 # Map the output (usually an index) to human-readable labels
 class_labels = [
@@ -52,7 +35,7 @@ def preprocess_image(image_path, image_height, image_width):
 
 
 # Main function for loading model and performing inference
-def classify_image(image_path):
+def bench_classification(image_path):
     # Initialize the Hailo VDevice
     target = VDevice()
 
@@ -99,6 +82,5 @@ def use_model(input_data, input_vstream_info, input_vstreams_params, network_gro
             print(f'Predicted label: {class_labels[predicted_class]}')
 
 
-# Test the function with your image
-image_path = '../img/1.jpg'  # Replace with the actual path to the image
-classify_image(image_path)
+def use(img):
+    bench_classification(img)
