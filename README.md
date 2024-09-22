@@ -10,7 +10,7 @@ Die main.py startet die Anwendung. Folgende Parameter sind einstellbar:
 - -i, --image:  Pfad zum Bild, das klassifiziert werden soll.
 
 
-### Ergebnisse:
+### Messergebnisse:
 
-![Ergbnisse](/results/Grafik.png)
+![Ergbnisse](/results/Grafik.png#center)
 
