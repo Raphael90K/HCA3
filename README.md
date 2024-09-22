@@ -9,3 +9,8 @@ Die main.py startet die Anwendung. Folgende Parameter sind einstellbar:
 - -d, --device: Device für die Ausführung [cpu, cuda, hailo]
 - -i, --image:  Pfad zum Bild, das klassifiziert werden soll.
 
+
+### Ergebnisse:
+
+![Ergbnisse](/results/Grafik.png)
+
