@@ -1,5 +1,4 @@
 import argparse
-import src.notebook_run as nr
 
 parser = argparse.ArgumentParser(prog="Simple Neural Network Benchmakr",
                                  description="Measures the millis for a classifying neural network",
@@ -13,12 +12,16 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print("Image: {}, Device: {}, starting".format(args.image, args.device))
     if args.device == "cuda":
+        import src.notebook_run as nr
+
         nr.use(args.image, args.device)
     elif args.device == "cpu":
+        import src.notebook_run as nr
+
         nr.use(args.image, args.device)
     elif args.device == "hailo":
         import src.hailo_run as hr
 
-        hr.bench_classification(args.image)
+        hr.use(args.image)
     else:
         parser.print_help()

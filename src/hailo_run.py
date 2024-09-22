@@ -5,7 +5,6 @@ from src.profiler import Profiler
 from hailo_platform import (HEF, VDevice, HailoStreamInterface, InferVStreams, ConfigureParams,
                             InputVStreamParams, OutputVStreamParams, InputVStreams, OutputVStreams, FormatType)
 
-
 # Map the output (usually an index) to human-readable labels
 class_labels = [
     'airplane', 'automobile', 'bird', 'cat', 'deer',
@@ -84,3 +83,6 @@ def use_model(input_data, input_vstream_info, input_vstreams_params, network_gro
 
 def use(img):
     bench_classification(img)
+
+    avg_time = profiler.get_average_time()
+    print(f"Average inference time: {avg_time:.4f} seconds")
