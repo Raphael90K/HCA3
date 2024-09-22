@@ -5,19 +5,20 @@ import numpy as np
 class Profiler:
     def __init__(self, num_iterations=5):
         """
-        Initializes the Profiler.
-        :param num_iterations: Number of iterations to run for profiling.
+        Initialisiert den Profiler.
+
         """
         self.num_iterations = num_iterations
         self.times = []
 
     def profile(self, func, *args, **kwargs):
         """
-        Profiles the given inference method over multiple iterations.
-        :param func: The function to profile.
-        :param args: Positional arguments to pass to the inference method.
-        :param kwargs: Keyword arguments to pass to the inference method.
-        :return: Inference results from the last iteration.
+        Misst die Laufzeit der Funktion.
+
+        :param func: Zu messende Funktion
+        :param args: args der Funktion
+        :param kwargs: kwags der Funktion
+        :return result: Ergebnis der letzten
         """
         print(f"Starting performance profiling for {self.num_iterations} iterations...")
         self.times = []
@@ -27,16 +28,17 @@ class Profiler:
             result = func(*args, **kwargs)  # Run the inference method
             end_time = time.time()  # End the timer
 
-            inference_time = end_time - start_time
-            self.times.append(inference_time)
-            print(f"Iteration {i + 1}/{self.num_iterations} took {inference_time:.4f} seconds.")
+            runtime = end_time - start_time
+            self.times.append(runtime)
+            print(f"Iteration {i + 1}/{self.num_iterations} took {runtime:.4f} seconds.")
 
         return result
 
     def get_average_time(self):
         """
-        Returns the average time per inference.
-        :return: Average inference time in seconds.
+        Gibt die durchnittliche Laufzeit zurück.
+
+        :return: Durchschnittszeit
         """
         if not self.times:
             raise ValueError("No profiling data available. Run `profile` first.")
@@ -44,6 +46,7 @@ class Profiler:
 
     def reset(self):
         """
-        Resets the recorded times.
+        Setzt die Zeiten zurück.
+
         """
         self.times = []

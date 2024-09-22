@@ -5,7 +5,7 @@ from src.profiler import Profiler
 from hailo_platform import (HEF, VDevice, HailoStreamInterface, InferVStreams, ConfigureParams,
                             InputVStreamParams, OutputVStreamParams, InputVStreams, OutputVStreams, FormatType)
 
-# Map the output (usually an index) to human-readable labels
+# Label des CIFAR10 Datasets
 class_labels = [
     'airplane', 'automobile', 'bird', 'cat', 'deer',
     'dog', 'frog', 'horse', 'ship', 'truck'
@@ -15,26 +15,29 @@ profiler = Profiler()
 
 # Load and preprocess the image to match the input shape
 def preprocess_image(image_path, image_height, image_width):
-    # Load the image
+    '''
+    Läd und führt Preporcessing des Bildes durch.
+
+    '''
     image = Image.open(image_path).convert('RGB')
 
-    # Resize the image to the model's input size
     image = image.resize((image_width, image_height))
 
-    # Convert the image to a numpy array
     image_array = np.array(image).astype(np.float32)  # Hailo models usually expect float32 data
 
-    # Normalize the image (this is standard for models trained on ImageNet or CIFAR)
     image_array = image_array / 255.0  # Normalize pixel values to [0, 1]
 
-    # Add batch dimension (1, height, width, channels)
     image_array = np.expand_dims(image_array, axis=0)
 
     return image_array
 
 
-# Main function for loading model and performing inference
 def bench_classification(image_path):
+    '''
+    Hauptfunktion, Läd das Modell und bereitet den Inferenzschritt vor.
+
+    '''
+
     # Initialize the Hailo VDevice
     target = VDevice()
 
@@ -68,6 +71,11 @@ def bench_classification(image_path):
 
 def use_model(input_data, input_vstream_info, input_vstreams_params, network_group, network_group_params,
               output_vstream_info, output_vstreams_params):
+    '''
+    Der Rechenschritt auf dem Hailo Prozessor.
+    Laufzeit dieser Funktion wird gemessen.
+
+    '''
     # Run inference
     with InferVStreams(network_group, input_vstreams_params, output_vstreams_params) as infer_pipeline:
         input_dict = {input_vstream_info.name: input_data}

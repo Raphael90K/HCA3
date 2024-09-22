@@ -4,6 +4,9 @@ from torchvision import models
 
 
 def transform(dev: str = "cuda"):
+    '''
+    Läd das Modell und wandelt es in das onnx (https://onnx.ai/) Format um.
+    '''
     device = torch.device(dev)
 
     # Dummy input for ONNX export (1 image of size 3x224x224)

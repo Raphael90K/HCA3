@@ -5,6 +5,11 @@ from torchvision import datasets, transforms, models
 
 
 def create_and_train(dev: str = "cuda"):
+    '''
+    Erstellt und trainiert ein Modell. Als Grundlage wird mobilenet_v2 (https://pytorch.org/vision/stable/models/mobilenetv2.html)
+    von pytorch und der CIFAR10 (https://www.cs.toronto.edu/~kriz/cifar.html) Datensatz verwendet.
+
+    '''
     device = torch.device(dev)
 
     # Hyperparameter

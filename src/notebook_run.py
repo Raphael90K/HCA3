@@ -14,6 +14,10 @@ profiler = Profiler()
 
 # Function to classify a single image
 def bench_classification(image_path, dev: str):
+    '''
+    Hauptfunktion, die das Modell läd, die Vorverarbeitung duchführt und den Profiler startet.
+
+    '''
     device = torch.device(dev)
 
     # Load the MobileNetV2 model and modify the classifier for your task (e.g., CIFAR-10 with 10 classes)
@@ -42,6 +46,9 @@ def bench_classification(image_path, dev: str):
 
 
 def use_model(device, preprocess, model):
+    '''
+    Inferenzschritt auf dem CPU oder der GPU. Die Laufzeit dieser Funktion wird gemessen.
+    '''
     # move to device
     input_tensor = preprocess.to(device)
     # Perform inference
