@@ -15,6 +15,6 @@ Die main.py startet die Anwendung. Folgende Parameter sind einstellbar:
 ### Messergebnisse:
 
 <div align="center">
-![Ergbnisse](/results/Grafik.png#center)
+    <img src="/results/Grafik.png">
 </div>
 
