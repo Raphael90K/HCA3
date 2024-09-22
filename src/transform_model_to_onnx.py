@@ -3,7 +3,7 @@ from torch import nn
 from torchvision import models
 
 
-def main(dev: str = "cuda"):
+def transform(dev: str = "cuda"):
     device = torch.device(dev)
 
     # Dummy input for ONNX export (1 image of size 3x224x224)
@@ -38,4 +38,4 @@ def main(dev: str = "cuda"):
     print("Model has been successfully exported to ONNX format.")
 
 
-main("cuda")
+transform("cuda")

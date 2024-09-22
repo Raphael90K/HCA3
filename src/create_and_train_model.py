@@ -4,8 +4,7 @@ import torch.optim as optim
 from torchvision import datasets, transforms, models
 
 
-def main(dev: str = "cuda"):
-    # Prüfe, ob GPU verfügbar ist
+def create_and_train(dev: str = "cuda"):
     device = torch.device(dev)
 
     # Hyperparameter
@@ -19,7 +18,6 @@ def main(dev: str = "cuda"):
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
-
     train_dataset = datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
     train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
@@ -52,4 +50,4 @@ def main(dev: str = "cuda"):
     torch.save(model.state_dict(), '../mobilenetv2_cifar10.pth')
 
 
-main("cuda")
+create_and_train("cuda")
