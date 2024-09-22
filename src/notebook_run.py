@@ -3,18 +3,23 @@ from torch import nn
 from torchvision import models, transforms
 from PIL import Image
 
+from src.profiler import Profiler
 
-# Define the device (use GPU if available, otherwise fallback to CPU)
+class_labels = [
+    'airplane', 'automobile', 'bird', 'cat', 'deer',
+    'dog', 'frog', 'horse', 'ship', 'truck'
+]
+profiler = Profiler()
 
 
 # Function to classify a single image
-def classify_image(image_path, dev: str = "cuda"):
+def bench_classification(image_path, dev: str):
     device = torch.device(dev)
 
     # Load the MobileNetV2 model and modify the classifier for your task (e.g., CIFAR-10 with 10 classes)
     model = models.mobilenet_v2(weights=None)
     model.classifier[1] = nn.Linear(model.last_channel, 10)  # Assuming 10 output classes (CIFAR-10)
-    model.load_state_dict(torch.load("../model/mobilenetv2_cifar10.pth", weights_only=True))  # Load custom weights
+    model.load_state_dict(torch.load("../model/mobilenetv2_cifar10.pth", weights_only=False, map_location=device))  # Load custom weights
     model = model.to(device)
     model.eval()  # Set model to evaluation mode
 
@@ -28,37 +33,31 @@ def classify_image(image_path, dev: str = "cuda"):
             std=[0.229, 0.224, 0.225]
         ),
     ])
-
-    predicted_class = use_model(device, image_path, model, preprocess)
-
-    return predicted_class.item()
-
-
-def use_model(device, image_path, model, preprocess):
     # Load the image and apply preprocessing
     image = Image.open(image_path).convert('RGB')
-    input_tensor = preprocess(image).unsqueeze(0).to(device)  # Add batch dimension and move to device
+    preprocess = preprocess(image).unsqueeze(0)
+
+    profiler.profile(use_model, device, preprocess, model)
+
+
+def use_model(device, preprocess, model):
+    # move to device
+    input_tensor = preprocess.to(device)
     # Perform inference
     with torch.no_grad():
         output = model(input_tensor)
     # Get the predicted class (highest probability)
     _, pred = torch.max(output, 1)
-    return pred
+    # Print the predicted class (this is an index)
+    print(f'Predicted class index: {int(pred)}')
+    # Get the human-readable label
+    print(f'Predicted label: {class_labels[pred]}')
 
 
 # Test the function with an image
 image_path = '../img/1.jpg'  # Replace with the path to your image
-predicted_class = classify_image(image_path, "cuda")
+bench_classification(image_path, "cpu")
 
-# Print the predicted class (this is an index)
-print(f'Predicted class: {predicted_class}')
+avg_time = profiler.get_average_time()
 
-# If you have a class label mapping (e.g., for CIFAR-10):
-# Here is a sample mapping for CIFAR-10
-class_labels = [
-    'airplane', 'automobile', 'bird', 'cat', 'deer',
-    'dog', 'frog', 'horse', 'ship', 'truck'
-]
-
-# Get the human-readable label
-print(f'Predicted label: {class_labels[predicted_class]}')
+print(f"Average inference time: {avg_time:.4f} seconds")

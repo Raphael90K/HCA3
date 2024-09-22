@@ -1,8 +1,34 @@
 import numpy as np
 from PIL import Image
-from multiprocessing import Process
-from hailo_platform import (HEF, VDevice, HailoStreamInterface, InferVStreams, ConfigureParams,
-                            InputVStreamParams, OutputVStreamParams, InputVStreams, OutputVStreams, FormatType)
+import importlib
+
+try:
+    # Dynamischer Import des gesamten 'hailo_platform'-Moduls
+    hailo_platform = importlib.import_module("hailo_platform")
+    print("hailo_platform Modul wurde erfolgreich importiert.")
+
+    # Zugriff auf die benötigten Klassen und Funktionen
+    HEF = hailo_platform.HEF
+    VDevice = hailo_platform.VDevice
+    HailoStreamInterface = hailo_platform.HailoStreamInterface
+    InferVStreams = hailo_platform.InferVStreams
+    ConfigureParams = hailo_platform.ConfigureParams
+    InputVStreamParams = hailo_platform.InputVStreamParams
+    OutputVStreamParams = hailo_platform.OutputVStreamParams
+    InputVStreams = hailo_platform.InputVStreams
+    OutputVStreams = hailo_platform.OutputVStreams
+    FormatType = hailo_platform.FormatType
+except ImportError:
+    pass
+
+from profiler import Profiler
+
+# Map the output (usually an index) to human-readable labels
+class_labels = [
+    'airplane', 'automobile', 'bird', 'cat', 'deer',
+    'dog', 'frog', 'horse', 'ship', 'truck'
+]
+profiler = Profiler()
 
 
 # Load and preprocess the image to match the input shape
@@ -32,7 +58,7 @@ def classify_image(image_path):
 
     # Load the HEF file for the model
     model_name = 'mobilenetv2_cifar10'
-    hef_path = 'model/{}.hef'.format(model_name)
+    hef_path = '../model/{}.hef'.format(model_name)
     hef = HEF(hef_path)
 
     # Configure network groups
@@ -53,6 +79,13 @@ def classify_image(image_path):
     input_vstreams_params = InputVStreamParams.make(network_group, format_type=FormatType.FLOAT32)
     output_vstreams_params = OutputVStreamParams.make(network_group, format_type=FormatType.UINT8)
 
+    # profile
+    profiler.profile(use_model, input_data, input_vstream_info, input_vstreams_params,
+                     network_group, network_group_params, output_vstream_info, output_vstreams_params)
+
+
+def use_model(input_data, input_vstream_info, input_vstreams_params, network_group, network_group_params,
+              output_vstream_info, output_vstreams_params):
     # Run inference
     with InferVStreams(network_group, input_vstreams_params, output_vstreams_params) as infer_pipeline:
         input_dict = {input_vstream_info.name: input_data}
@@ -60,24 +93,12 @@ def classify_image(image_path):
             infer_results = infer_pipeline.infer(input_dict)
             output_data = infer_results[output_vstream_info.name]
 
-            # Print output shape and data
-            print(f'Inference output shape: {output_data.shape}')
-            print(f'Inference raw output: {output_data}')
-
-    return output_data
+            # Assuming output is a class index (this depends on your model's output format)
+            predicted_class = np.argmax(output_data)
+            print(f'Predicted class index: {predicted_class}')
+            print(f'Predicted label: {class_labels[predicted_class]}')
 
 
 # Test the function with your image
-image_path = 'img/1.jpg'  # Replace with the actual path to the image
-output = classify_image(image_path)
-
-# Map the output (usually an index) to human-readable labels
-class_labels = [
-    'airplane', 'automobile', 'bird', 'cat', 'deer',
-    'dog', 'frog', 'horse', 'ship', 'truck'
-]
-
-# Assuming output is a class index (this depends on your model's output format)
-predicted_class = np.argmax(output)
-print(f'Predicted class index: {predicted_class}')
-print(f'Predicted label: {class_labels[predicted_class]}')
+image_path = '../img/1.jpg'  # Replace with the actual path to the image
+classify_image(image_path)
