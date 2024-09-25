@@ -2,3 +2,4 @@
 2. transform_model_to_onnx
 3. cli: hailo parser onnx --net-name mobilenetv2_cifar10 --hw-arch hailo8l mobilenetv2_cifar10.onnx
 4. cli: hailo optimize --hw-arch hailo8l --use-random-calib-set mobilenetv2_cifar10.har
+5. cli: hailo compiler mobilenetv2_cifar10_optimized.har
